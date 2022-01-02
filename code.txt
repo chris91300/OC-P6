@@ -1,0 +1,10 @@
+200 OK	Le serveur à traiter la requête avec succès.
+201 CREATED	Une nouvelle ressource a été créée.
+204 No Content	Peut être utilisée en réponse à une requête DELETE effectuée avec succès.
+206 Partial Content	En réponse à une requête demandant une réponse trop lourde pour être envoyée en une seule fois. De la pagination va être nécessaire pour récupérer l’ensemble des informations
+304 Not Modified	Le client peut utiliser les données en cache car elles n’ont pas été modifiées depuis la date spécifiée.
+400 Bad Request	La requête est invalide et ne peut pas être traitée par le serveur.
+401 Unauthorized	La requête nécessite que le client soit identifié.
+403 Forbidden	Le serveur a compris la requête mais l’utilisateur n’est pas autorisé à accéder à cette API.
+404 Not Found	La ressource demandée n’existe pas.
+500 Internal Server Error	Votre code ne devrait jamais renvoyer cette erreur. Cette erreur devrait être récupérée par votre code et traitée, pour ensuite renvoyer une réponse adéquate au client.
