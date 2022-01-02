@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "projet 6",
+  "main": "server.js",
+  "scripts": {
+    "start" : "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chris91300/OC-P6.git"
+  },
+  "author": "michel christophe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chris91300/OC-P6/issues"
+  },
+  "homepage": "https://github.com/chris91300/OC-P6#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "mongoose": "^6.1.4"
+  }
+}
