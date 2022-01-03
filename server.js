@@ -1,7 +1,7 @@
-const dotenv = require("dotenv");
-dotenv.config();
+require("dotenv").config();
 
-const PORT = process.env.PORT;
+
+const PORT = parseInt(process.env.PORT);
 const PATHDB = process.env.PATHDB;
 const http = require('http');
 const mongoose = require('mongoose');
@@ -23,11 +23,8 @@ mongoose.connect(PATHDB, { useNewUrlParser: true, useUnifiedTopology: true })
 const app = require("./app");
 
 
-app.get("/", (req, res)=>{
-    
-    res.send("ok ça marche")
-})
-app.listen(PORT || 3000, ()=>{
+
+app.listen(PORT,  ()=>{
     
     console.log("serveur à l'écoute sur le port "+ PORT)
 });
