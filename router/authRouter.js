@@ -1,19 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
-const auth_Controller = require('../controllers/AuthController')
+const { SIGNUP, LOGIN } = require('../controllers/AuthController')
+const checkUserData = require('../utils/middleware/checkUserData');
 
 
 /**
- * enregistre un nouvel utilisateur
+ * save a new user
+ * use the middleware checkUserData to verify the value of his data (inputs)
  */
-router.post("/signup", auth_Controller.SIGNUP)
+router.post("/signup", checkUserData, SIGNUP)
 
 
 /**
- * authentifie un utilisateur
+ * authenticates a user when requesting a connection
+ * use the middleware checkUserData to verify the value of his data (inputs)
  */
-router.post("/login", auth_Controller.LOGIN)
+router.post("/login", checkUserData, LOGIN)
 
 
 module.exports = router;

@@ -1,7 +1,7 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const path = require('path');
+const getImageName = require('../utils/functions/getImageName');
 
-const like = JSON.stringify([]);
-const dislike = JSON.stringify([]);
 
 const sauceShema = mongoose.Schema({
     //  l'identifiant MongoDB unique de l'utilisateur qui a créé la sauce
@@ -32,10 +32,30 @@ const sauceShema = mongoose.Schema({
     dislikes : { type : Number , required : true, default : 0 },
 
     //  tableau des identifiants des utilisateurs qui ont aimé (= liked) la sauce
-    usersLiked : { type : String, default : like},
+    usersLiked : { type : Array, default : [String]},
 
     //  tableau des identifiants des utilisateurs qui n'ont pas aimé (= disliked) la sauce
-    usersDisliked : { type : String, default : dislike}
+    usersDisliked : { type : Array, default : [String]}
+})
+
+
+sauceShema.post('save', function(err, doc, next){
+    console.log("on est en post save")
+    if (err){ console.log(err); next(new Error(" erreur dans bdd"))}
+    else { console.log("pas d'err"); next()}
+    
+})
+
+/**
+ * return the path for the image 
+ */
+sauceShema.virtual('oldPath').get(function(){
+    
+    let imageName = getImageName(this.imageUrl);
+    let staticPath = path.resolve('./images');
+    let oldImagePath = staticPath + "/" + imageName;
+    
+    return oldImagePath;
 })
 
 module.exports = mongoose.model('Sauce', sauceShema);
