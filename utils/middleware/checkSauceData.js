@@ -3,8 +3,13 @@ const fs = require('fs');
 const path = require('path');
 const getImageName = require('../functions/getImageName');
 
+
+/**
+ * verify each input value when user save or update a sauce
+ * special character are not allowed in order to block SQL or script injection
+ */
 module.exports = ( req, res, next ) => {
-    console.log("on est dans checkSauceData");
+    
     let data = req.file === undefined ? req.body : JSON.parse(req.body.sauce);    
     let imagePath = req.file ? req.file.path : undefined; 
     let regex = /[\<\>\{\}\$]/;
@@ -14,9 +19,6 @@ module.exports = ( req, res, next ) => {
     let  description = data.description;
     let mainPepper = data.mainPepper;
     let heat = data.heat;
-    console.log(data)
-    console.log("test de name")
-    console.log(regex.test(name))
 
     if ( 
         userId != undefined & !regex.test(userId) &
@@ -26,19 +28,19 @@ module.exports = ( req, res, next ) => {
         mainPepper != undefined & !regex.test(mainPepper) &
         heat != undefined & !regex.test(heat)
     ) {
-        console.log("input présent et valides");
+        
         next();
 
     } else {
-        console.log("problème avec inputs")
+       
         if ( imagePath != undefined ) {
-            console.log("il y a une image")
+            
             let imageName = getImageName(req.file.path);  
             let staticPath = path.resolve('./images');  
             let imagePath = staticPath + "/" + imageName;
             fs.unlink(imagePath, ()=>{
                 console.log("image supprimé");
-                console.log(imagePath)
+                
             });
         }
 

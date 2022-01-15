@@ -3,6 +3,7 @@
 /**
  * Verify if data send by the user for singup or login are valid
  * check password and email
+ * in order to block SQL or script injection
  */
 module.exports = (req, res, next) => {
     console.log("on vérifie les données utilisateur")

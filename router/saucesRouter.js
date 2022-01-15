@@ -6,6 +6,7 @@ const auth = require('../utils/middleware/auth');
 const upload = require('../utils/middleware/upload');
 const canIDo = require('../utils/middleware/canIDo');
 const checkSauceData = require('../utils/middleware/checkSauceData');
+const resize = require('../utils/middleware/resize');
 
 
 /**
@@ -17,7 +18,7 @@ router.get("/", auth, GETSAUCES)
 /**
  * save the user's new sauce
  */
- router.post("/", auth, upload, checkSauceData, SAVESAUCE)
+ router.post("/", auth, upload, checkSauceData, resize,  SAVESAUCE)
 
 
 /**
@@ -28,7 +29,7 @@ router.get("/", auth, GETSAUCES)
  /**
  * update the sauce
  */
-  router.put("/:id", auth, canIDo, upload, checkSauceData, UPDATESAUCE)
+  router.put("/:id", auth, canIDo, upload, checkSauceData, resize, UPDATESAUCE)
 
 
  /**

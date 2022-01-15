@@ -92,7 +92,8 @@ exports.UPDATESAUCE = async ( req, res, next ) =>{
     let sauce = await Sauce.findOneAndUpdate( filter, update );
     
     if ( imagePath != undefined ){        
-        
+        console.log("l'ancien path de l'image est ");
+        console.log(sauce.oldPath)
         fs.unlinkSync(sauce.oldPath);// use sauceShema.virtual('oldpath')
     }
     

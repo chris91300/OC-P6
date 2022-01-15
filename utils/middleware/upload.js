@@ -20,7 +20,7 @@ const limits = { fileSize : 2000000 };
 
 const filter = (req, file, cb) => {
     
-    const fileTypes = /png|jpeg|jpg/;
+    const fileTypes = /png|jpeg|jpg|webp/;
     const extName = fileTypes.test(path.extname(file.originalname));
     file.originalname.toLowerCase();
     const mimeType = fileTypes.test(file.mimetype);

@@ -7,7 +7,6 @@ const UserP6 = require('../../models/User')
  */
 module.exports = (req, res, next) => {
   try {
-      console.log("on est dans le middleware auth")
       
     const token = req.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token, process.env.TOKEN);
