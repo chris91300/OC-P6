@@ -14,7 +14,7 @@ module.exports = ( req, res, next ) => {
         next();
     } else {
         console.log("sauce id invalid")
-        res.status(403).json({ message : "identifiant de la sauce incorrect."});
+        res.status(400).json({ message : "identifiant de la sauce incorrect."});
     }
 
 }

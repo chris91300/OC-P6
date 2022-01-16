@@ -28,7 +28,7 @@ exports.GETSAUCES = ( req, res, next ) =>{
         res.status(200).json(sauces);
     } )
     .catch( ( err ) => {// error of find
-        res.status(404).json( { err } );
+        res.status(500).json( { message : "Une erreur est surevnue" } );
     } )
 
 }
@@ -60,7 +60,7 @@ exports.SAVESAUCE = ( req, res, next ) =>{
         res.status(201).json({message : "votre sauce a bien été enregistré."});
     })
     .catch((err) =>{
-        res.status(500).json(err);
+        res.status(500).json({message : "Une erreur est survenue. Votre sauce n'a pas été enregistrée."});
     })
     
 }
@@ -77,7 +77,7 @@ exports.GETSAUCE = ( req, res, next ) =>{
         res.status(200).json(sauce);
     })
     .catch( ( err ) => {
-        res.status(500).json(err);
+        res.status(400).json( { message : "Sauce non trouvé" } );
     })
 }
 
@@ -97,16 +97,22 @@ exports.UPDATESAUCE = async ( req, res, next ) =>{
         update.imageUrl = imageUrl;
     }
 
-    let sauce = await Sauce.findOneAndUpdate( filter, update );
+    try {
+
+        let sauce = await Sauce.findOneAndUpdate( filter, update );
     
-    if ( imagePath != undefined ){        
-        console.log("l'ancien path de l'image est ");
-        console.log(sauce.oldPath)
-        fs.unlinkSync(sauce.oldPath);// use sauceShema.virtual('oldpath')
+        if ( imagePath != undefined ){        
+            console.log("l'ancien path de l'image est ");
+            console.log(sauce.oldPath)
+            fs.unlinkSync(sauce.oldPath);// use sauceShema.virtual('oldpath')
+        }        
+
+        res.status(200).json( { message : "sauce modifiée." });
+
+    } catch(err) {
+        res.status(500).json( { message : "Une erreur est survenue lors de la mise à jour de votre sauce" } );
     }
     
-
-    res.status(200).json( { message : "sauce modifiée." });
     
     
 }
@@ -130,7 +136,7 @@ exports.DELETESAUCE = ( req, res, next ) =>{
     .catch( ( err ) => {
 
         console.log(err)
-        res.status(500).json( err );
+        res.status(400).json( { message : "Sauce non répertoriée." } );
 
     })
 }
@@ -198,11 +204,11 @@ exports.LIKESAUCE = ( req, res, next ) =>{
             res.status(200).json( { message : "Votre avis a bien été pris en compte."});
         })
         .catch( ( err ) => {// error of save sauce
-            res.status(500).json( err )
+            res.status(500).json( { message : "Une erreur est survenue." } )
         })
     })
     .catch( (err) => {// error of findById
-        res.status(500).json( err )
+        res.status(400).json( { message : "Sauce non répertoriée." } )
     })
 
 }

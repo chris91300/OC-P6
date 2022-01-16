@@ -17,7 +17,6 @@ module.exports = (req, res, next) => {
     }
     else {
         console.log("données invalides")
-        let err = new Error("Données invalides.");
-        res.status(403).json( err );
+        res.status(400).json( { message : "Données invalides."} );
     }
 }

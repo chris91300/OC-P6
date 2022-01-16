@@ -26,7 +26,7 @@ module.exports = async ( req, res, next ) => {
            
         }catch(err){
             console.log(err)
-            res.status(401).json(err);
+            res.status(500).json( { message : "Une erreur est survenue." } );
         }
         
 

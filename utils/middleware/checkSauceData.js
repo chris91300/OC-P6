@@ -44,7 +44,7 @@ module.exports = ( req, res, next ) => {
             });
         }
 
-        res.status(401).json( { message : "champs invalides."});
+        res.status(400).json( { message : "champs invalides."});
     }
 
 

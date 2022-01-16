@@ -25,12 +25,12 @@ module.exports = ( req, res, next ) => {
         else {
             console.log("sauce .userId != userId")
 
-            res.status(403).json( { message : "unauthorized request." })
+            res.status(401).json( { message : "Action non autorisée." })
         }
     })
     .catch( (err) => {
         console.log("sauce non trouvé")
-        res.status(403).json( err );
+        res.status(400).json(  { message : "Sauce non répertoriée." });
     })
 }
 

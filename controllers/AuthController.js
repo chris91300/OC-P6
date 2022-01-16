@@ -34,13 +34,13 @@ exports.SIGNUP = ( req, res ) =>{
         .catch( (err) => {// error of save
             console.log("erreur de save")
             
-            res.status(404).json({ message : err.message })
+            res.status(400).json({ message : err.message })
         })
     })
     .catch( (err) => {// error of hash
         console.log("erreur de hash")
         console.log(err)
-        res.status(404).json({ err })
+        res.status(500).json({ message : "Une erreur est survenue lors de votre enregistrement" })
     })
         
 
@@ -81,14 +81,14 @@ exports.LOGIN = ( req, res, next ) =>{
 
         } else {
             console.log("user trouvé mais password invalide")
-            res.status(400).json(new Error("password invalide"));
+            res.status(400).json({ message : "Password invalide"});
         }
 
     })
     .catch( (err) => {// error of findOne
         console.log("erreur user not find")
         console.log(err)
-        res.status(401).json({ err })
+        res.status(400).json({ message : "Utilisateur inconnu" })
     })
         
 }

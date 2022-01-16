@@ -7,10 +7,10 @@ module.exports = function uniqueEmail(shema, options){
             
             if ( err.code === 11000 ) {
                 console.log("email deja use")
-                let errStillUse = new Error(" email déjà utilisée.");
-                next( errStillUse  );
+                err = new Error(" email déjà utilisée.");
+                next( err  );
             } else {
-                console.log("aytre err")
+                err = new Error("Une erreur est survenue lors de votre enregistrement");
                 
                 next( err );
             }
