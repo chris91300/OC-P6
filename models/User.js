@@ -3,13 +3,22 @@ const mongoose = require('mongoose')
 const uniqueEmail = require('../utils/plugins/uniqueEmail')
 
 const userShema = mongoose.Schema({
-    //  adresse e-mail de l'utilisateur
-    email : { type : String, required : true, unique : true },
 
-    //  mot de passe de l'utilisateur haché
-    password : { type : String, required : true} 
+    //  user email. must be unique
+    email : {
+        type : String,
+        required : true,
+        unique : true
+    },
+
+    //  hashed user password
+    password : {
+        type : String,
+        required : true
+    } 
 })
 
+// peut être à supprimer car aucun intêret vue que unique : true
 userShema.plugin(uniqueEmail);
 
 

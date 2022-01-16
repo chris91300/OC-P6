@@ -3,7 +3,11 @@ const jwt = require('jsonwebtoken');
 const UserP6 = require('../../models/User')
 
 /**
- * 
+ * verify if the user is authorize to do this requet
+ * get the token in headers autorization
+ * get the userId in encoded in the token
+ * if userId is a valid id and user is in the DB , he can
+ * else he can't
  */
 module.exports = (req, res, next) => {
   try {

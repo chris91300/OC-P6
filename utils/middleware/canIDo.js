@@ -2,7 +2,11 @@
 const jwt = require('jsonwebtoken');
 const Sauce = require('../../models/Sauce');
 
-
+/**
+ * verify if the userId of the sauce is the same as the id in the token
+ * if is the same, the user can do update or delete the sauce
+ * else he can't
+ */
 module.exports = ( req, res, next ) => {
     console.log("on est dans canIDo");
     const token = req.headers.authorization.split(' ')[1];

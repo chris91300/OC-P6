@@ -6,7 +6,9 @@ const Sauce = require('../models/Sauce');
 const getImageName = require('../utils/functions/getImageName');
 
 
-
+/**
+ * get all the sauces in the DB
+ */
 exports.GETSAUCES = ( req, res, next ) =>{
     console.log("get sauces")
     Sauce.find({})
@@ -25,13 +27,15 @@ exports.GETSAUCES = ( req, res, next ) =>{
         
         res.status(200).json(sauces);
     } )
-    .catch( ( err ) => {
+    .catch( ( err ) => {// error of find
         res.status(404).json( { err } );
     } )
 
 }
 
-
+/**
+ * add a new sauce in the DB
+ */
 exports.SAVESAUCE = ( req, res, next ) =>{
     console.log("SAVESAUCE")
     
@@ -61,7 +65,9 @@ exports.SAVESAUCE = ( req, res, next ) =>{
     
 }
 
-
+/**
+ * get the sauce with the id sended in the url
+ */
 exports.GETSAUCE = ( req, res, next ) =>{
     console.log("get sauce")
     let id = req.params.id;
@@ -75,7 +81,9 @@ exports.GETSAUCE = ( req, res, next ) =>{
     })
 }
 
-
+/**
+ * update the sauce with the id in parameter in the url
+ */
 exports.UPDATESAUCE = async ( req, res, next ) =>{
     console.log("UPDATESAUCE")
     let sauceId = req.params.id;
@@ -103,7 +111,10 @@ exports.UPDATESAUCE = async ( req, res, next ) =>{
     
 }
 
-
+/**
+ * remove the sauce with the id in parameter into the DB
+ * and remove the image on the directory images
+ */
 exports.DELETESAUCE = ( req, res, next ) =>{
     console.log("DELETESAUCE")
     let sauceId = req.params.id;
@@ -124,7 +135,10 @@ exports.DELETESAUCE = ( req, res, next ) =>{
     })
 }
 
-
+/**
+ * users can like or dislike the sauce
+ * or remove their like or dislike
+ */
 exports.LIKESAUCE = ( req, res, next ) =>{
     console.log("LIKESAUCE")
     let { userId , like } = req.body;
@@ -172,8 +186,9 @@ exports.LIKESAUCE = ( req, res, next ) =>{
 
                 break;
             
-            default : 
-                //nothing for the moment
+            default :
+
+                throw new Error("vous aimez ou pas cette sauce?")
 
         }
 
@@ -182,9 +197,12 @@ exports.LIKESAUCE = ( req, res, next ) =>{
             
             res.status(200).json( { message : "Votre avis a bien été pris en compte."});
         })
-        .catch( ( err ) => {
+        .catch( ( err ) => {// error of save sauce
             res.status(500).json( err )
         })
+    })
+    .catch( (err) => {// error of findById
+        res.status(500).json( err )
     })
 
 }

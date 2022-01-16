@@ -6,14 +6,16 @@ require("dotenv").config();
 
 
 
-
-exports.SIGNUP = ( req, res, next ) =>{
-    console.log("sign up")
+/**
+ * save a new user in the database
+ */
+exports.SIGNUP = ( req, res ) =>{
     
     let email = req.body.email;
     let password = req.body.password;    
 
-    bcrypt.hash(password, 10)
+    bcrypt
+    .hash(password, 10)
     .then( (hash) => {
         
         let data = {
@@ -24,18 +26,18 @@ exports.SIGNUP = ( req, res, next ) =>{
         let user = new UserP6(data);
 
         user.save()
-        .then( (response) => {
+        .then( () => {
             
             res.status(201).json({message : "utilisateur créé."});
 
         })
-        .catch( (err) => {
+        .catch( (err) => {// error of save
             console.log("erreur de save")
-            //console.log(err)
-            res.status(404).json({ err })
+            
+            res.status(404).json({ message : err.message })
         })
     })
-    .catch( (err) => {
+    .catch( (err) => {// error of hash
         console.log("erreur de hash")
         console.log(err)
         res.status(404).json({ err })
@@ -44,16 +46,20 @@ exports.SIGNUP = ( req, res, next ) =>{
 
 }
 
-
+/**
+ * when user try to connecte himself
+ * get user in the DB and compare the passwords
+ * if they are the same password user can be connected
+ * else connection refused
+ */
 exports.LOGIN = ( req, res, next ) =>{
-    console.log("login")
     
     let email = req.body.email;
     let password = req.body.password;    
 
     UserP6.findOne( { email : email } )
     .then( ( user ) => {
-        console.log("user trouvé")
+        
         let hash = user.password;
         let passwordIsTheSame = bcrypt.compareSync(password, hash);
 
@@ -79,7 +85,7 @@ exports.LOGIN = ( req, res, next ) =>{
         }
 
     })
-    .catch( (err) => {
+    .catch( (err) => {// error of findOne
         console.log("erreur user not find")
         console.log(err)
         res.status(401).json({ err })

@@ -4,50 +4,86 @@ const getImageName = require('../utils/functions/getImageName');
 
 
 const sauceShema = mongoose.Schema({
-    //  l'identifiant MongoDB unique de l'utilisateur qui a créé la sauce
-    userId : { type : String , required : true },
 
-    //  nom de la sauce
-    name : { type : String, required : true },
+    //  the user id of the user who created the sauce
+    userId : {
+        type : String,
+        required : true
+    },
 
-    //  fabricant de la sauce
-    manufacturer : { type : String , required : true },
+    //  sauce name
+    name : {
+        type : String,
+        required : true
+    },
 
-    //  description de la sauce
-    description : { type : String , required : true },
+    //  sauce manufacturer
+    manufacturer : {
+        type : String,
+        required : true
+    },
 
-    //  le principal ingrédient épicé de la sauce
-    mainPepper : { type : String , required : true },
+    //sauce description
+    description : {
+        type : String,
+        required : true
+    },
 
-    //  l'URL de l'image de la sauce téléchargée par l'utilisateur
-    imageUrl : { type : String, required : true},
+    //  the main spicy ingredient in the sauce
+    mainPepper : {
+        type : String,
+        required : true
+    },
 
-    //   nombre entre 1 et 10 décrivant la sauce
-    heat : { type : Number , required : true },
+    //  the URL of the sauce image uploaded by the user
+    imageUrl : {
+        type : String,
+        required : true
+    },
 
-    //  nombre d'utilisateurs qui aiment (= likent) la sauce
-    likes : { type : Number , required : true, default : 0 },
+    //   number between 1 and 10 describing the sauce
+    heat : {
+        type : Number,
+        required : true
+    },
 
-    //  nombre d'utilisateurs qui n'aiment pas (= dislike) la sauce
-    dislikes : { type : Number , required : true, default : 0 },
+    // total of users who like the sauce
+    likes : {
+        type : Number,
+        required : true,
+        default : 0
+    },
 
-    //  tableau des identifiants des utilisateurs qui ont aimé (= liked) la sauce
-    usersLiked : { type : Array, default : [String]},
+    //  total of users who dislike the sauce
+    dislikes : {
+        type : Number,
+        required : true,
+        default : 0
+    },
 
-    //  tableau des identifiants des utilisateurs qui n'ont pas aimé (= disliked) la sauce
-    usersDisliked : { type : Array, default : [String]}
+    // array of userId who liked the sauce
+    usersLiked : {
+        type : Array,
+        default : [String]
+    },
+
+    //  array of userId who disliked the sauce
+    usersDisliked : {
+        type : Array,
+        default : [String]
+    }
 })
 
-
+/*
 sauceShema.post('save', function(err, doc, next){
     console.log("on est en post save")
     if (err){ console.log(err); next(new Error(" erreur dans bdd"))}
     else { console.log("pas d'err"); next()}
     
-})
+})*/
 
 /**
- * return the path for the image 
+ * return the path of the image (the old image in order to remove it with fs.unlink)
  */
 sauceShema.virtual('oldPath').get(function(){
     
