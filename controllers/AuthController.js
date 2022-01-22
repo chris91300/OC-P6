@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { response } = require('express');
-const UserP6 = require('../models/User');
+const UserModel = require('../models/User');
+const { find } = require('../models/User');
 require("dotenv").config();
 
 
@@ -9,39 +10,42 @@ require("dotenv").config();
 /**
  * save a new user in the database
  */
-exports.SIGNUP = ( req, res ) =>{
+exports.SIGNUP = async ( req, res ) =>{
     
     let email = req.body.email;
     let password = req.body.password;    
 
-    bcrypt
-    .hash(password, 10)
-    .then( (hash) => {
-        
+    try{ // try to get a hashed password 
+
+        let hash = await bcrypt.hash(password, 10);
+
         let data = {
             email : email,
             password : hash
         };
 
-        let user = new UserP6(data);
+        let user = new UserModel(data);
 
-        user.save()
-        .then( () => {
-            
-            res.status(201).json({message : "utilisateur créé."});
+        try{// try to save the new User
 
-        })
-        .catch( (err) => {// error of save
-            console.log("erreur de save")
+            let newUser = await user.save()
+
+            if ( newUser ) {
+
+                res.status(201).json({message : "utilisateur créé."});
+
+            }
+
+        } catch (err) {// catch save user
             
             res.status(400).json({ message : err.message })
-        })
-    })
-    .catch( (err) => {// error of hash
-        console.log("erreur de hash")
-        console.log(err)
+        }
+        
+
+    } catch ( err ) {// catch hash password
+        
         res.status(500).json({ message : "Une erreur est survenue lors de votre enregistrement" })
-    })
+    }
         
 
 }
@@ -52,17 +56,18 @@ exports.SIGNUP = ( req, res ) =>{
  * if they are the same password user can be connected
  * else connection refused
  */
-exports.LOGIN = ( req, res, next ) =>{
+exports.LOGIN = async ( req, res, next ) =>{
     
     let email = req.body.email;
     let password = req.body.password;    
 
-    UserP6.findOne( { email : email } )
-    .then( ( user ) => {
+    try{ // try to find the user and compare the two passwords
+       
+        let user = await UserModel.findOne( { email : email } );
         
         let hash = user.password;
-        let passwordIsTheSame = bcrypt.compareSync(password, hash);
-
+        let passwordIsTheSame = await bcrypt.compare(password, hash);
+        
         if( passwordIsTheSame ) {
 
             let token = jwt.sign(
@@ -80,15 +85,14 @@ exports.LOGIN = ( req, res, next ) =>{
 
 
         } else {
-            console.log("user trouvé mais password invalide")
+            
             res.status(400).json({ message : "Password invalide"});
         }
 
-    })
-    .catch( (err) => {// error of findOne
-        console.log("erreur user not find")
-        console.log(err)
+    } catch(err){// catch find user
+        
         res.status(400).json({ message : "Utilisateur inconnu" })
-    })
+        
+    }
         
 }

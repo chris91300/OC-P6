@@ -18,8 +18,11 @@ const userShema = mongoose.Schema({
     } 
 })
 
-// peut être à supprimer car aucun intêret vue que unique : true
+// plugin who throw specific error message if email is already use
 userShema.plugin(uniqueEmail);
 
+// si j'utilise la base de donnée piiquante 
+module.exports = mongoose.model('User', userShema);
 
-module.exports = mongoose.model('UserP6', userShema);
+// si j'utilise la base de donnée express
+//module.exports = mongoose.model('UserP6', userShema);

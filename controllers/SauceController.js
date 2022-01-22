@@ -9,35 +9,25 @@ const getImageName = require('../utils/functions/getImageName');
 /**
  * get all the sauces in the DB
  */
-exports.GETSAUCES = ( req, res, next ) =>{
-    console.log("get sauces")
-    Sauce.find({})
-    .then( ( sauces ) => {
-       /* sauces.map( (sauce) =>{
-            let id = sauce._id;
-            console.log("id = "+id)
-            Sauce.findByIdAndDelete({ _id : id})
-            .then(()=>{
-                console.log("sauce supprimer")
-            })
-            .catch((err)=>{
-                console.log(err)
-            })
-        })*/
-        
+exports.GETSAUCES = async ( req, res ) =>{
+    
+    try{
+
+        let sauces = await Sauce.find({});         
         res.status(200).json(sauces);
-    } )
-    .catch( ( err ) => {// error of find
-        res.status(500).json( { message : "Une erreur est surevnue" } );
-    } )
+
+    } catch ( err )  {// error of find
+
+        res.status(500).json( { message : "Une erreur est survenue" } );
+    } 
+    
 
 }
 
 /**
  * add a new sauce in the DB
  */
-exports.SAVESAUCE = ( req, res, next ) =>{
-    console.log("SAVESAUCE")
+exports.SAVESAUCE = async ( req, res ) =>{
     
     let { name, manufacturer, description, mainPepper, heat, userId } = JSON.parse(req.body.sauce);
     let imageName = getImageName(req.file.path);    
@@ -55,46 +45,60 @@ exports.SAVESAUCE = ( req, res, next ) =>{
 
     let sauce = new Sauce(data);
 
-    sauce.save()
-    .then(()=>{
-        res.status(201).json({message : "votre sauce a bien été enregistré."});
-    })
-    .catch((err) =>{
+    try{
+        sauce = await sauce.save();
+
+        if ( sauce ){
+
+            res.status(201).json({message : "votre sauce a bien été enregistré."});
+
+        }
+    } catch (err){
+
         res.status(500).json({message : "Une erreur est survenue. Votre sauce n'a pas été enregistrée."});
-    })
+
+    }
+    
+   
     
 }
 
 /**
  * get the sauce with the id sended in the url
  */
-exports.GETSAUCE = ( req, res, next ) =>{
-    console.log("get sauce")
-    let id = req.params.id;
+exports.GETSAUCE = async ( req, res ) =>{
+    
+    let id = req.params.id;    
 
-    Sauce.findById({_id : id})
-    .then( ( sauce ) => {
+    try{
+
+        let sauce = await Sauce.findById({_id : id});
         res.status(200).json(sauce);
-    })
-    .catch( ( err ) => {
+
+    } catch (err) {
+
         res.status(400).json( { message : "Sauce non trouvé" } );
-    })
+
+    }
+
 }
 
 /**
  * update the sauce with the id in parameter in the url
  */
-exports.UPDATESAUCE = async ( req, res, next ) =>{
-    console.log("UPDATESAUCE")
+exports.UPDATESAUCE = async ( req, res ) =>{
+    
     let sauceId = req.params.id;
     let filter = { _id : sauceId };
     let update = req.file === undefined ? req.body : JSON.parse(req.body.sauce);    
     let imagePath = req.file ? req.file.path : undefined;    
     
     if ( imagePath != undefined ) {
+
         let imageName = getImageName(imagePath);
         let imageUrl = process.env.URLIMAGEDIRECTORY + imageName;
         update.imageUrl = imageUrl;
+
     }
 
     try {
@@ -102,15 +106,17 @@ exports.UPDATESAUCE = async ( req, res, next ) =>{
         let sauce = await Sauce.findOneAndUpdate( filter, update );
     
         if ( imagePath != undefined ){        
-            console.log("l'ancien path de l'image est ");
-            console.log(sauce.oldPath)
+            
             fs.unlinkSync(sauce.oldPath);// use sauceShema.virtual('oldpath')
+
         }        
 
         res.status(200).json( { message : "sauce modifiée." });
 
     } catch(err) {
+
         res.status(500).json( { message : "Une erreur est survenue lors de la mise à jour de votre sauce" } );
+
     }
     
     
@@ -121,37 +127,38 @@ exports.UPDATESAUCE = async ( req, res, next ) =>{
  * remove the sauce with the id in parameter into the DB
  * and remove the image on the directory images
  */
-exports.DELETESAUCE = ( req, res, next ) =>{
-    console.log("DELETESAUCE")
+exports.DELETESAUCE = async ( req, res ) =>{
+    
     let sauceId = req.params.id;
     let filter = { _id : sauceId };
 
-    Sauce.findOneAndDelete(filter)
-    .then( ( sauce ) => {
-        
+    try{
+
+        let sauce = await Sauce.findOneAndDelete(filter);
         fs.unlinkSync(sauce.oldPath);
         res.status(200).json( { message : "sauce supprimée." } );
 
-    })
-    .catch( ( err ) => {
+    } catch (err){
 
-        console.log(err)
-        res.status(400).json( { message : "Sauce non répertoriée." } );
+        res.status(400).json( { message : "Sauce non répertoriée." } )
 
-    })
+    }
+
 }
 
 /**
  * users can like or dislike the sauce
  * or remove their like or dislike
  */
-exports.LIKESAUCE = ( req, res, next ) =>{
-    console.log("LIKESAUCE")
+exports.LIKESAUCE = async ( req, res ) =>{
+    
     let { userId , like } = req.body;
     let sauceId = req.params.id;
-    
-    Sauce.findById( { _id : sauceId } )
-    .then( ( sauce ) => {
+
+    try{
+
+        let sauce = await Sauce.findById( { _id : sauceId } );
+
         switch(like) {
             case 1 :
                 
@@ -198,17 +205,29 @@ exports.LIKESAUCE = ( req, res, next ) =>{
 
         }
 
-        sauce.save()
-        .then( ( sauce ) => {
-            
-            res.status(200).json( { message : "Votre avis a bien été pris en compte."});
-        })
-        .catch( ( err ) => {// error of save sauce
+        try{
+
+            let sauceSaved = await sauce.save();
+
+            if ( sauceSaved ) {
+                
+                res.status(200).json( { message : "Votre avis a bien été pris en compte."});
+
+            }
+
+        }catch (err) {
+
             res.status(500).json( { message : "Une erreur est survenue." } )
-        })
-    })
-    .catch( (err) => {// error of findById
+
+        }
+        
+
+    } catch (err) {
+
         res.status(400).json( { message : "Sauce non répertoriée." } )
-    })
+
+    }
+    
+    
 
 }

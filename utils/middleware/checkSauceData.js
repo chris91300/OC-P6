@@ -38,15 +38,13 @@ module.exports = ( req, res, next ) => {
             let imageName = getImageName(req.file.path);  
             let staticPath = path.resolve('./images');  
             let imagePath = staticPath + "/" + imageName;
-            fs.unlink(imagePath, ()=>{
-                console.log("image supprimé");
-                
-            });
+
+            fs.unlink(imagePath, ()=>{ console.log("image supprimé"); });
+
         }
 
         res.status(400).json( { message : "champs invalides."});
+
     }
-
-
 
 }

@@ -74,13 +74,7 @@ const sauceShema = mongoose.Schema({
     }
 })
 
-/*
-sauceShema.post('save', function(err, doc, next){
-    console.log("on est en post save")
-    if (err){ console.log(err); next(new Error(" erreur dans bdd"))}
-    else { console.log("pas d'err"); next()}
-    
-})*/
+
 
 /**
  * return the path of the image (the old image in order to remove it with fs.unlink)

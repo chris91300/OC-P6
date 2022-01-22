@@ -21,14 +21,6 @@ app.use((req, res, next) => {
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "same-site" }));
 
-/*app.use(helmet.contentSecurityPolicy({
-  useDefaults: true,
-  directives: {
-    "default-src" : ["'self'", "http://localhost:8080"],
-    "script-src": ["'self'", "code.jquery.com", "'unsafe-eval'"],
-    "style-src": ["'self'", "use.fontawesome.com"],
-  },
-}))*/
 
 
 

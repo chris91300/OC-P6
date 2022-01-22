@@ -10,6 +10,7 @@ const UserP6 = require('../../models/User')
  * else he can't
  */
 module.exports = (req, res, next) => {
+
   try {
       
     const token = req.headers.authorization.split(' ')[1];
@@ -18,21 +19,18 @@ module.exports = (req, res, next) => {
 
     UserP6.findById( { _id : userId } )
     .then( ( user ) => {
-        console.log("user authentifié")
+        
         next();
 
     })
     .catch( ( err ) => {
-        console.log(err)
-        res.status(401).json({
-            error: new Error('jeton invalide')
-          });
+        
+        res.status(401).json({ message : 'jeton invalide' });
+            
     } )
     
   } catch {
-         console.log("probleme dans le middleware auth.js")
-        res.status(500).json({
-            error: new Error('jeton invalide')
-        });
+         
+        res.status(500).json({ message : 'jeton invalide' });
   }
 };

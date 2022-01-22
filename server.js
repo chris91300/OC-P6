@@ -2,7 +2,9 @@ require("dotenv").config();
 
 
 const PORT = parseInt(process.env.PORT);
-const PATHDB = process.env.PATHDB;
+const DB_USER = process.env.DB_USER;
+const DB_PASSWORD = process.env.DB_PASSWORD;
+const DB_PATH = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.s0lwf.mongodb.net/piiquante?retryWrites=true&w=majority`;
 const http = require('http');
 const mongoose = require('mongoose');
 
@@ -11,7 +13,7 @@ const mongoose = require('mongoose');
 /***************************************************** */
 
 
-mongoose.connect(PATHDB, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(DB_PATH, { useNewUrlParser: true, useUnifiedTopology: true })
         .then(() => console.log('Connexion à MongoDB réussie !'))
         .catch((err) => {console.log('Connexion à MongoDB échouée !'); console.log(err);});
 
